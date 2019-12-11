@@ -11,20 +11,20 @@ app.use(bodyParser.json());
 
 const config = {
   response_mode: 'form_post',
-  url_authorize: 'https://accounts.haravan.com/connect/authorize',
-  url_connect_token: 'https://accounts.haravan.com/connect/token',
+  url_authorize: 'https://accounts.hara.vn/connect/authorize',
+  url_connect_token: 'https://accounts.hara.vn/connect/token',
   grant_type: 'authorization_code',
   nonce: 'asdfasdgd',
   response_type: 'code id_token',
-  app_id: '270acd3c5f191a85fae7b063335bfec6',
-  app_secret: '87040444d8ae7198856bddf3b7185b8b66b584dd66e7fa3fed69eed4545f089f',
+  app_id: '4c5022e7863adb4af30ba766c3211e2b',
+  app_secret: 'bf6a3b119ac3ef53b05d775e9969de3839eae82ae5f804f428bf5ab877fc669f',
   scope_login: 'openid profile email org userinfo',
-  scope: 'offline_access openid profile email org userinfo com.read_products wh_api grant_service',
+  scope: 'openid profile email org userinfo com.write_products com.write_orders com.write_customers com.write_shippings com.write_inventories com.write_discounts grant_service offline_access wh_api',
   login_callback_url: 'http://localhost:3000/install/login',
   install_callback_url: 'http://localhost:3000/install/grandservice',
   webhook: {
     hrVerifyToken: 'bOL3XFfZabhKe6dnJfCJuTAfi37dFchQ',  //https://randomkeygen.com/ (CodeIgniter Encryption Keys)
-    subscribe: 'https://webhook.haravan.com/api/subscribe'
+    subscribe: 'https://webhook.hara.vn/api/subscribe'
   },
 };
 
@@ -112,7 +112,7 @@ function getShop(access_token) {
   return new Promise(resolve => {
     let options = {
       method: 'GET',
-      url: 'https://apis.haravan.com/com/shop.json',
+      url: 'https://apis.hara.vn/com/shop.json',
       headers:
         {
           authorization: `Bearer ${access_token}`,
