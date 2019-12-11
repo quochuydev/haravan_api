@@ -285,6 +285,6 @@ app.use('/', function (req, res) {
   res.redirect('/install/login');
 });
 
-app.listen(3000, function () {
-  console.log('listening on 3000')
+app.listen(3030, function () {
+  console.log('listening on 3030')
 });
