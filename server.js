@@ -6,6 +6,9 @@ const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const request = require("request");
 const bodyParser = require('body-parser');
+
+app.set('port', (process.env.PORT || 5000));
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -285,6 +288,6 @@ app.use('/', function (req, res) {
   res.redirect('/install/login');
 });
 
-app.listen(3030, function () {
-  console.log('listening on 3030')
+app.listen(app.get('port'), function () {
+  console.log(`listening on ${app.get('port')}`)
 });
