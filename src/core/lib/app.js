@@ -4,6 +4,7 @@ const path = require('path');
 const Routes = require(path.resolve('./src/core/routes/routes'))
 const Express = require('./express');
 const Mongoose = require('./mongoose');
+const config = require('../config/default');
 
 const App = {
   init: () => {
@@ -12,6 +13,7 @@ const App = {
       console.log('connect success');
     })
     .catch(err => {
+      console.log(err)
       console.log('connect mongo fail');
     })
     Express(app);
@@ -20,7 +22,7 @@ const App = {
 
   start: () => {
     App.init();
-    app.listen(3000, () => {
+    app.listen(port, () => {
       console.log('running port 3000');
     })
   }

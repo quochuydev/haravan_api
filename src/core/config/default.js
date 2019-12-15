@@ -1,6 +1,9 @@
 module.exports = {
+  port: process.env.PORT || 3000,
+  host: process.env.HOST || "localhost",
   db: {
-    uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "mongodb://" + (process.env.DB_1_PORT_27017_TCP_ADDR || "localhost") + "/qhdapp",
+    // uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "mongodb://" + (process.env.DB_1_PORT_27017_TCP_ADDR || "localhost") + "/qhdapp",
+    uri: "mongodb://:@ds253418.mlab.com:53418/qhdapp",
     options: {
       server: { poolSize: 10, socketOptions: { keepAlive: 1 } },
       user: "",
