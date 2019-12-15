@@ -7,6 +7,7 @@ const ShopMD = mongoose.model('Shop');
 exports.get = async (req, res) => {
   let shop = req.session.shop;
   let shop_id = req.session.shop_id;
+  let access_token = req.session.access_token;
   let HR = {}
   HR.CUSTOMERS = {
     LIST: {
@@ -15,9 +16,7 @@ exports.get = async (req, res) => {
       resPath: 'body.customers'
     }
   }
-  let shopFound = await ShopMD.findOne({ shop_id }).lean(true);
-  if (!shopFound) throw { error: true }
-  let customers = await API.call(HR.CUSTOMERS.LIST, { shop: shopFound });
+  let customers = await API.call(HR.CUSTOMERS.LIST, { access_token });
   let count = {
     api: 'customers.json',
     new: 0,

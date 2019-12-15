@@ -1,8 +1,6 @@
 const path = require('path');
-const mongoose = require('mongoose');
 const install = require(path.resolve('./src/install/routes/install'));
 const customers = require(path.resolve('./src/customers/routes/customers'));
-const ShopMD = mongoose.model('Shop');
 
 const routes = (app) => {
   app.use('/*', async (req, res, next) => {
@@ -10,7 +8,7 @@ const routes = (app) => {
     if (req.originalUrl.indexOf('install') != -1) return next();
     res.sendStatus(401);
   })
-  
+
   app.get('/', (req, res) => {
     res.send({ error: false });
   })
