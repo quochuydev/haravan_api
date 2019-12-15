@@ -10,7 +10,7 @@ const App = {
   init: () => {
     Mongoose.connect()
     .then(db => {
-      console.log('connect success');
+      console.log('connect mongo success');
     })
     .catch(err => {
       console.log(err)
@@ -22,7 +22,7 @@ const App = {
 
   start: () => {
     App.init();
-    app.listen(port, () => {
+    app.listen(config.port, () => {
       console.log('running port 3000');
     })
   }
