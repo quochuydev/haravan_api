@@ -11,6 +11,9 @@ module.exports = {
     },
     debug: process.env.MONGODB_DEBUG || false
   },
+  appslug: 'qhdapp',
+  sessionCollection: 'sessions',
+
   response_mode: 'form_post',
   url_authorize: 'https://accounts.hara.vn/connect/authorize',
   url_connect_token: 'https://accounts.hara.vn/connect/token',

@@ -46,7 +46,11 @@ exports.grandservice = async (req, res) => {
 		} else {
 			let customerUpdate = await ShopMD.findOneAndUpdate({ shop_id }, { $set: updateData }, { lean: true, new: true });
 		}
-		res.send({ error: false });
+		req.session.shop = shop;
+		req.session.shop_id = shop_id;
+		req.session.access_token = authorizeInfo.access_token;
+		req.session.save();
+		res.send({ error: false, data: req.session });
 
 		//if have use webhook, you need subscribe webhook with org token to use
 		// await subscribe(authorizeInfo.access_token);

@@ -10,15 +10,15 @@ const App = {
     Mongoose.load();
     Mongoose.connect()
     .then(db => {
+      Express(app, db);
+      const Routes = require(path.resolve('./src/core/routes/routes'))
+      Routes(app);
       console.log('connect mongo success');
     })
     .catch(err => {
       console.log(err)
       console.log('connect mongo fail');
     })
-    const Routes = require(path.resolve('./src/core/routes/routes'))
-    Express(app);
-    Routes(app);
   },
 
   start: () => {
