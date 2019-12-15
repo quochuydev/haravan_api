@@ -8,7 +8,7 @@ const routes = (app) => {
   })
 
   app.use('/install', install);
-  app.use('/customers', customers);
+  app.use('/api/customers', customers);
 }
 
 module.exports = routes;

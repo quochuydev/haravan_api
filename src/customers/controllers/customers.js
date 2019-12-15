@@ -21,22 +21,22 @@ exports.get = async (req, res) => {
   for (let i = 0; i < customers.length; i++) {
     try {
       const customer = customers[i];
-      let customerNew = new CustomersMD(customer);
-      await customerNew.save()
-      await timeout(100)
+      let found = await CustomersMD.findOne({ id: customer.id }).lean(true);
+      if (!found) {
+        let customerNew = new CustomersMD(customer);
+        await customerNew.save()
+      } else {
+        let customerUpdate = await CustomersMD.findOneAndUpdate({ id: customer.id }, { $set: customer }, { lean: true, new: true });
+      }
     } catch {
 
     }
   }
-  res.send({ customers })
+  res.send({ error: false })
 }
 
-const timeout = (time) => { return new Promise(setTimeout(resolve, time)) }
-
 exports.post = (req, res) => {
-  let link = 'https://apis.hara.vn/com/customers.json';
-  let customers = API.call({ method: 'get', url: link });
-  res.send({ customers });
+  res.send({ error: false });
 }
 
 let test = async () => {
