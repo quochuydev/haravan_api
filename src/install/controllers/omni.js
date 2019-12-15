@@ -25,10 +25,6 @@ exports.grandservice = async (req, res) => {
 			expires_in: param_token.expires_in
 		};
 
-		// authorizeInfo can save to database shop for reuse later
-
-		// https://quochuydev.sku.vn/
-		//test request shop.json
 		let shopData = await omniBus.getShop(authorizeInfo.access_token);
 		let shop = shopData.shop.myharavan_domain.replace('http://', '');
 		shop = shopData.shop.myharavan_domain.replace('https://', '');

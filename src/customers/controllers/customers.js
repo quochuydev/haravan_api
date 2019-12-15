@@ -18,6 +18,12 @@ exports.get = async (req, res) => {
   let shopFound = await ShopMD.findOne({ shop_id }).lean(true);
   if (!shopFound) throw { error: true }
   let customers = await API.call(HR.CUSTOMERS.LIST, { shop: shopFound });
+  let count = {
+    api: 'customers.json',
+    new: 0,
+    update: 0,
+    start_time: new Date()
+  }
   for (let i = 0; i < customers.length; i++) {
     try {
       const customer = customers[i];
@@ -27,14 +33,18 @@ exports.get = async (req, res) => {
       if (!found) {
         let customerNew = new CustomersMD(customer);
         await customerNew.save()
+        count.new++;
       } else {
-        let customerUpdate = await CustomersMD.findOneAndUpdate({ id: customer.id }, { $set: customer }, { lean: true, new: true });
+        await CustomersMD.findOneAndUpdate({ id: customer.id }, { $set: customer }, { lean: true, new: true });
+        count.update++;
       }
     } catch {
 
     }
   }
-  res.send({ error: false })
+  count.end_time = new Date();
+  count.time = (count.end_time - count.start_time) / 1000 + 's';
+  res.send({ error: false, data: { shop, count } })
 }
 
 exports.post = (req, res) => {
