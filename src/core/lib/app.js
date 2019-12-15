@@ -1,13 +1,13 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const Routes = require(path.resolve('./src/core/routes/routes'))
-const Express = require('./express');
 const Mongoose = require('./mongoose');
+const Express = require('./express');
 const config = require('../config/default');
 
 const App = {
   init: () => {
+    Mongoose.load();
     Mongoose.connect()
     .then(db => {
       console.log('connect mongo success');
@@ -16,6 +16,7 @@ const App = {
       console.log(err)
       console.log('connect mongo fail');
     })
+    const Routes = require(path.resolve('./src/core/routes/routes'))
     Express(app);
     Routes(app);
   },

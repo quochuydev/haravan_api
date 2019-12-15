@@ -18,16 +18,17 @@ const config = {
 	app_secret: 'bf6a3b119ac3ef53b05d775e9969de3839eae82ae5f804f428bf5ab877fc669f',
 	scope_login: 'openid profile email org userinfo',
 	scope: 'openid profile email org userinfo com.write_products com.write_orders com.write_customers com.write_shippings com.write_inventories com.write_discounts grant_service offline_access wh_api',
-	// login_callback_url: 'http://localhost:3000/install/login',
-	// install_callback_url: 'http://localhost:3000/install/grandservice',
-	login_callback_url: 'https://quochuydev-app.herokuapp.com/install/login',
-	install_callback_url: 'https://quochuydev-app.herokuapp.com/install/grandservice',
+	login_callback_url: 'http://localhost:3000/install/login',
+	install_callback_url: 'http://localhost:3000/install/grandservice',
+	// login_callback_url: 'https://quochuydev-app.herokuapp.com/install/login',
+	// install_callback_url: 'https://quochuydev-app.herokuapp.com/install/grandservice',
 	webhook: {
 		hrVerifyToken: 'bOL3XFfZabhKe6dnJfCJuTAfi37dFchQ',  //https://randomkeygen.com/ (CodeIgniter Encryption Keys)
 		subscribe: 'https://webhook.hara.vn/api/subscribe'
 	},
 };
 
+module.exports = { buildUrlLogin, buildUrlInstall, getToken, getUserFromDecodeJwt, getShop, subscribe, webhookValidate }
 
 function buildUrlLogin() {
 	let objQuery = {
@@ -42,7 +43,7 @@ function buildUrlLogin() {
 	return `${config.url_authorize}?${query}`;
 }
 
-exports.buildUrlInstall = function() {
+function buildUrlInstall() {
 	let objQuery = {
 		response_mode: config.response_mode,
 		response_type: config.response_type,
@@ -76,7 +77,7 @@ function getToken(code, callback_url) {
 					console.log('error', err);
 					resolve();
 				} else {
-					console.log('param_token', param_token);
+					// console.log('param_token', param_token);
 					resolve(param_token)
 				}
 			});
@@ -123,7 +124,7 @@ function getShop(access_token) {
 
 		request(options, function (error, response, body) {
 			if (error) throw new Error(error);
-			console.log(body);
+			// console.log(body);
 			resolve(body)
 		});
 	})
