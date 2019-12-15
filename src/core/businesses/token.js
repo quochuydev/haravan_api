@@ -2,10 +2,10 @@ const express = require('express');
 const app = express();
 const OAuth2 = require('oauth').OAuth2;
 const querystring = require('querystring');
+const path = require('path');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const request = require("request");
-const bodyParser = require('body-parser');
 const config = require(path.resolve('./src/core/config/default'));
 
 module.exports = { buildUrlLogin, buildUrlInstall, getToken, getUserFromDecodeJwt, getShop, subscribe, webhookValidate }
