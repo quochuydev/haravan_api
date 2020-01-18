@@ -6,7 +6,10 @@ let config = {
   scope: 'openid profile email org userinfo',
   scope_install: 'openid profile email org userinfo com.write_products com.write_orders com.write_customers com.write_shippings com.write_inventories com.write_discounts grant_service offline_access wh_api',
   login_callback_url: 'http://localhost:3000/install/login',
-  install_callback_url: 'http://localhost:3000/install/login',
+  install_callback_url: 'http://localhost:3000/install/grandservice',
+  webhook: {
+    hrVerifyToken: 'bOL3XFfZabhKe6dnJfCJuTAfi37dFchQ',
+  }
 }
 
 let { app_id, app_secret } = config;
@@ -51,6 +54,7 @@ const start = ({ app }) => {
     });
     let param_token = await HrvAPI.getToken(code);
     let { access_token, expires_in, token_type } = param_token;
+    await HrvAPI.subscribe({ access_token });
     res.send({ access_token, expires_in, token_type })
   })
 

@@ -1,5 +1,6 @@
 const { OAuth2 } = require('oauth');
 const querystring = require('querystring');
+const request = require('request');
 
 const config = {
   url_authorize: 'https://accounts.hara.vn/connect/authorize',
@@ -8,6 +9,9 @@ const config = {
   response_mode: 'form_post',
   response_type: 'code id_token',
   nonce: 'nonce',
+  webhook: {
+    subscribe: 'https://webhook.hara.vn/api/subscribe'
+  }
 }
 
 class HaravanAPI {
@@ -69,6 +73,30 @@ class HaravanAPI {
         return resolve();
       }
     }))
+  }
+
+  async subscribe({ access_token }) {
+    return new Promise(resolve => {
+      try {
+        let options = {
+          method: 'POST',
+          url: config.webhook.subscribe,
+          headers: {
+            authorization: `Bearer ${access_token}`,
+            'Content-Type': 'application/json'
+          }
+        };
+
+        request(options, function (error, response, body) {
+          if (error) { console.log(error); }
+          console.log(body);
+          resolve();
+        });
+      } catch (e) {
+        console.log(e);
+        resolve();
+      }
+    })
   }
 }
 
