@@ -1,15 +1,22 @@
 {
   "name": "haravan_api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node ./server.js",
     "test": "node test"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quochuydev/wooapi.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/quochuydev/haravan_api/issues"
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
     "connect-mongo": "^3.2.0",
