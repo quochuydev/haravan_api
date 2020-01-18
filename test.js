@@ -1,6 +1,4 @@
 let HaravanAPI = require('./index');
-let express = require('express');
-let app = express();
 
 let config = {
   app_id: '4c5022e7863adb4af30ba766c3211e2b',
@@ -11,11 +9,12 @@ let config = {
   install_callback_url: 'http://localhost:3000/install/login',
 }
 
+let { app_id, app_secret } = config;
+
 const start = ({ app }) => {
   app.get('/buildLinkLogin', async (req, res) => {
     let HrvAPI = new HaravanAPI({
-      app_id: config.app_id,
-      app_secret: config.app_secret,
+      app_id, app_secret,
       scope: config.scope,
       callback_url: config.login_callback_url
     });
@@ -25,8 +24,7 @@ const start = ({ app }) => {
 
   app.get('/buildLinkInstall', async (req, res) => {
     let HrvAPI = new HaravanAPI({
-      app_id: config.app_id,
-      app_secret: config.app_secret,
+      app_id, app_secret,
       scope: config.scope_install,
       callback_url: config.install_callback_url
     });
@@ -35,17 +33,25 @@ const start = ({ app }) => {
   })
 
   app.post('/install/login', async (req, res) => {
-    // let HrvAPI = new HaravanAPI({
-    //   app_id: '4c5022e7863adb4af30ba766c3211e2b',
-    //   app_secret: 'bf6a3b119ac3ef53b05d775e9969de3839eae82ae5f804f428bf5ab877fc669f',
-    // });
-    // let token = await HrvAPI.getToken();
-    // console.log(token);
-    res.send('login')
+    let { code, id_token } = req.body;
+    let HrvAPI = new HaravanAPI({
+      app_id, app_secret,
+      callback_url: config.login_callback_url
+    });
+    let param_token = await HrvAPI.getToken(code);
+    let { access_token, expires_in, token_type } = param_token;
+    res.send({ access_token, expires_in, token_type })
   })
 
   app.post('/install/grandservice', async (req, res) => {
-
+    let { code, id_token } = req.body;
+    let HrvAPI = new HaravanAPI({
+      app_id, app_secret,
+      callback_url: config.install_callback_url
+    });
+    let param_token = await HrvAPI.getToken(code);
+    let { access_token, expires_in, token_type } = param_token;
+    res.send({ access_token, expires_in, token_type })
   })
 
   const PORT = process.env.PORT || 3000;
@@ -53,4 +59,13 @@ const start = ({ app }) => {
     console.log(`running on port: ${PORT}`)
   });
 }
-start({ app });
+
+const test = () => {
+  let express = require('express');
+  let bodyParser = require('body-parser');
+  let app = express();
+  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(bodyParser.json())
+  start({ app });
+}
+test()
