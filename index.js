@@ -2,7 +2,8 @@ const { OAuth2 } = require('oauth');
 const querystring = require('querystring');
 const request = require('request');
 
-const config = {
+let config;
+config = {
   url_authorize: 'https://accounts.hara.vn/connect/authorize',
   url_connect_token: 'https://accounts.hara.vn/connect/token',
   grant_type: 'authorization_code',

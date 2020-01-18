@@ -11,8 +11,8 @@
     "type": "git",
     "url": "git+https://github.com/quochuydev/wooapi.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["Haravan", "Haravan API"],
+  "author": "quochuydev",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/quochuydev/haravan_api/issues"
