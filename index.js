@@ -119,6 +119,10 @@ class HaravanAPI {
         if (data) {
           options.body = JSON.stringify(data);
         }
+        
+        if(query){
+          options.url = `${options.url}?${querystring.stringify(query)}`
+        }
 
         request(options, function (error, response, body) {
           if (error) { console.log(error); }
