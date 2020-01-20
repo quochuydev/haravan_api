@@ -104,7 +104,7 @@ class HaravanAPI {
 
   call(f, plus) {
     let { url, method, resPath } = f;
-    let { access_token, data } = plus;
+    let { access_token, data, query } = plus;
     return new Promise(resolve => {
       try {
         let options = {
@@ -119,7 +119,7 @@ class HaravanAPI {
         if (data) {
           options.body = JSON.stringify(data);
         }
-        
+
         if(query){
           options.url = `${options.url}?${querystring.stringify(query)}`
         }
