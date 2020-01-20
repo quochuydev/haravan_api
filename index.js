@@ -1,11 +1,13 @@
 const { OAuth2 } = require('oauth');
 const querystring = require('querystring');
+const _ = require('lodash');
 const request = require('request');
 
 let config;
 config = {
   url_authorize: 'https://accounts.hara.vn/connect/authorize',
   url_connect_token: 'https://accounts.hara.vn/connect/token',
+  host: 'https://apis.hara.vn',
   grant_type: 'authorization_code',
   response_mode: 'form_post',
   response_type: 'code id_token',
@@ -99,6 +101,55 @@ class HaravanAPI {
       }
     })
   }
+
+  call(f, plus) {
+    let { url, method, resPath } = f;
+    let { access_token, data } = plus;
+    return new Promise(resolve => {
+      try {
+        let options = {
+          method,
+          url: `${config.host}/${url}`,
+          headers: {
+            authorization: `Bearer ${access_token}`,
+            'Content-Type': 'application/json'
+          },
+        };
+
+        if (data) {
+          options.body = JSON.stringify(data);
+        }
+
+        request(options, function (error, response, body) {
+          if (error) { console.log(error); }
+          console.log(`[CALL] [${String(options.method).toUpperCase()}] ${options.url} - ${response.statusCode}`);
+          let data = JSON.parse(body);
+          if (resPath) { return resolve(_.get(data, resPath)); }
+          resolve(data);
+        });
+      } catch (e) {
+        console.log(e);
+        resolve();
+      }
+    })
+  }
 }
 
 module.exports = HaravanAPI;
+
+// let HRV = {}
+// HRV.ORDERS = {
+//   LIST: {
+//     method: 'get',
+//     url: `com/orders.json`
+//   },
+//   COUNT: {
+//     method: 'get',
+//     url: `com/orders/count.json`,
+//     resPath: 'count'
+//   }
+// }
+// let API = new HaravanAPI({})
+// API.call(HRV.ORDERS.COUNT, { access_token: 'ff6989e637b18cafff5747be860bd4cd79a01a774685f207fea47aa9118e7675' }).then(res => {
+//   console.log(res)
+// });
