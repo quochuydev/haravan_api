@@ -3,8 +3,7 @@ const querystring = require('querystring');
 const _ = require('lodash');
 const request = require('request');
 
-let config;
-config = {
+let config_test = {
   url_authorize: 'https://accounts.hara.vn/connect/authorize',
   url_connect_token: 'https://accounts.hara.vn/connect/token',
   host: 'https://apis.hara.vn',
@@ -17,53 +16,67 @@ config = {
   }
 }
 
+let config_pro = {
+  url_authorize: 'https://accounts.haravan.com/connect/authorize',
+  url_connect_token: 'https://accounts.haravan.com/connect/token',
+  host: 'https://apis.haravan.com',
+  grant_type: 'authorization_code',
+  response_mode: 'form_post',
+  response_type: 'code id_token',
+  nonce: 'nonce',
+  webhook: {
+    subscribe: 'https://webhook.haravan.com/api/subscribe'
+  }
+}
+
 class HaravanAPI {
-  constructor({ app_id, app_secret, scope, callback_url }) {
+  constructor({ app_id, app_secret, scope, callback_url, is_test }) {
     this.app_id = app_id;
     this.app_secret = app_secret;
     this.scope = scope;
     this.callback_url = callback_url;
+    this.config = is_test ? config_test : config_pro;
   }
 
   buildLinkLogin() {
     let objQuery = {
-      response_mode: config.response_mode,
-      response_type: config.response_type,
+      response_mode: this.config.response_mode,
+      response_type: this.config.response_type,
       scope: this.scope,
       client_id: this.app_id,
       redirect_uri: this.callback_url,
-      nonce: config.nonce
+      nonce: this.config.nonce
     };
     let query = querystring.stringify(objQuery);
-    return `${config.url_authorize}?${query}`;
+    return `${this.config.url_authorize}?${query}`;
   }
 
   buildLinkInstall() {
     let objQuery = {
-      response_mode: config.response_mode,
-      response_type: config.response_type,
+      response_mode: this.config.response_mode,
+      response_type: this.config.response_type,
       scope: this.scope,
       client_id: this.app_id,
       redirect_uri: this.callback_url,
-      nonce: config.nonce
+      nonce: this.config.nonce
     };
     let query = querystring.stringify(objQuery);
-    return `${config.url_authorize}?${query}`;
+    return `${this.config.url_authorize}?${query}`;
   }
 
   getToken(code) {
     return new Promise((resolve => {
       try {
         let params = {};
-        params.grant_type = config.grant_type;
+        params.grant_type = this.config.grant_type;
         params.redirect_uri = this.callback_url;
 
         let _oauth2 = new OAuth2(
           this.app_id,
           this.app_secret,
           '',
-          config.url_authorize,
-          config.url_connect_token,
+          this.config.url_authorize,
+          this.config.url_connect_token,
           ''
         );
 
@@ -83,7 +96,7 @@ class HaravanAPI {
       try {
         let options = {
           method: 'POST',
-          url: config.webhook.subscribe,
+          url: this.config.webhook.subscribe,
           headers: {
             authorization: `Bearer ${access_token}`,
             'Content-Type': 'application/json'
@@ -109,7 +122,7 @@ class HaravanAPI {
       try {
         let options = {
           method,
-          url: `${config.host}/${url}`,
+          url: `${this.config.host}/${url}`,
           headers: {
             authorization: `Bearer ${access_token}`,
             'Content-Type': 'application/json'
