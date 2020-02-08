@@ -30,11 +30,12 @@ let config_pro = {
 }
 
 class HaravanAPI {
-  constructor({ app_id, app_secret, scope, callback_url, is_test }) {
+  constructor({ app_id, app_secret, scope, callback_url, is_test, access_token }) {
     this.app_id = app_id;
     this.app_secret = app_secret;
     this.scope = scope;
     this.callback_url = callback_url;
+    this.access_token = access_token;
     this.config = is_test ? config_test : config_pro;
   }
 
@@ -117,7 +118,8 @@ class HaravanAPI {
 
   call(f, plus) {
     let { url, method, resPath } = f;
-    let { access_token, data, query } = plus;
+    let { data, query, params } = plus;
+    let { access_token } = this || plus;
     return new Promise(resolve => {
       try {
         let options = {
@@ -132,6 +134,8 @@ class HaravanAPI {
         if (data) {
           options.body = JSON.stringify(data);
         }
+
+        if (params) { options.url = compile(options.url, params); }
 
         if (query) {
           options.url += '?'
@@ -153,6 +157,15 @@ class HaravanAPI {
       }
     })
   }
+}
+
+function compile(template, data) {
+  let result = template.toString ? template.toString() : '';
+  result = result.replace(/{.+?}/g, function (matcher) {
+    var path = matcher.slice(1, -1).trim();
+    return _.get(data, path, '');
+  });
+  return result;
 }
 
 module.exports = HaravanAPI;
