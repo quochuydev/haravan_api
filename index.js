@@ -133,8 +133,11 @@ class HaravanAPI {
           options.body = JSON.stringify(data);
         }
 
-        if(query){
-          options.url = `${options.url}?${querystring.stringify(query)}`
+        if (query) {
+          options.url += '?'
+          for (let f in query) {
+            if (f && query[f]) { options.url += `${f}=${query[f]}` }
+          }
         }
 
         request(options, function (error, response, body) {
