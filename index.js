@@ -116,9 +116,9 @@ class HaravanAPI {
     })
   }
 
-  call(f, plus) {
+  call(f, plus, callback) {
     let { url, method, resPath } = f;
-    let { data, query, params } = plus;
+    let { data, query, params, fields } = plus;
     let { access_token } = this || plus;
     return new Promise(resolve => {
       try {
@@ -131,9 +131,7 @@ class HaravanAPI {
           },
         };
 
-        if (data) {
-          options.body = JSON.stringify(data);
-        }
+        if (data) { options.body = JSON.stringify(data); }
 
         if (params) { options.url = compile(options.url, params); }
 
@@ -143,16 +141,30 @@ class HaravanAPI {
             if (f && query[f]) { options.url += `${f}=${query[f]}` }
           }
         }
+        if (fields) {
+          if (typeof fields == 'object') {
 
+          }
+
+          if (typeof fields == 'string') {
+
+          }
+
+          if (typeof fields == 'array') {
+
+          }
+        }
         request(options, function (error, response, body) {
           if (error) { console.log(error); }
           console.log(`[CALL] [${String(options.method).toUpperCase()}] ${options.url} - ${response.statusCode}`);
           let data = JSON.parse(body);
-          if (resPath) { return resolve(_.get(data, resPath)); }
+          if (resPath) { data = _.get(data, resPath); }
+          if (callback) { callback(null, data) }
           resolve(data);
         });
       } catch (e) {
         console.log(e);
+        if (callback) { callback(e, null) }
         resolve();
       }
     })
