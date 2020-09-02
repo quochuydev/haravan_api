@@ -120,7 +120,7 @@ class HaravanAPI {
     let { url, method, resPath } = f;
     let { data, query, params, fields } = plus;
     let { access_token } = this || plus;
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       try {
         let options = {
           method,
