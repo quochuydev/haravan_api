@@ -23,7 +23,7 @@ let config_pro = {
   grant_type: 'authorization_code',
   response_mode: 'form_post',
   response_type: 'code id_token',
-  nonce: 'nonce',
+  nonce: 'as0i102k',
   webhook: {
     subscribe: 'https://webhook.haravan.com/api/subscribe'
   }
@@ -54,15 +54,19 @@ class HaravanAPI {
 
   buildLinkInstall() {
     let objQuery = {
-      response_mode: this.config.response_mode,
-      response_type: this.config.response_type,
-      scope: this.scope,
-      client_id: this.app_id,
-      redirect_uri: this.callback_url,
-      nonce: this.config.nonce
+      response_mode: 'form_post',
+      response_type: encodeURIComponent('code id_token'),
+      scope: encodeURIComponent(this.scope),
+      client_id: encodeURIComponent(this.app_id),
+      nonce: this.getRandomArbitrary(10000, 99999),
+      redirect_uri: encodeURIComponent(this.callback_url)
     };
-    let query = querystring.stringify(objQuery);
+    let query = Object.keys(objQuery).map(key => key + '=' + objQuery[key]).join('&');
     return `${this.config.url_authorize}?${query}`;
+  }
+
+  getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
   }
 
   getToken(code) {
@@ -119,7 +123,7 @@ class HaravanAPI {
   call(f, plus, callback) {
     let { url, method, resPath } = f;
     let { data, query, params, fields } = plus;
-    let { access_token } = this || plus;
+    let access_token = this.access_token || plus.access_token;
     return new Promise((resolve, reject) => {
       try {
         let options = {
@@ -136,10 +140,8 @@ class HaravanAPI {
         if (params) { options.url = compile(options.url, params); }
 
         if (query) {
-          options.url += '?'
-          for (let f in query) {
-            if (f && query[f]) { options.url += `${f}=${query[f]}` }
-          }
+          let queryString = Object.keys(query).map(key => key + '=' + query[key]).join('&');
+          options.url += `?${queryString}`;
         }
         if (fields) {
           if (typeof fields == 'object') {
