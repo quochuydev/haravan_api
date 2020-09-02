@@ -155,17 +155,28 @@ class HaravanAPI {
           }
         }
         request(options, function (error, response, body) {
-          if (error) { console.log(error); }
-          console.log(`[CALL] [${String(options.method).toUpperCase()}] ${options.url} - ${response.statusCode}`);
-          let data = JSON.parse(body);
-          if (resPath) { data = _.get(data, resPath); }
-          if (callback) { callback(null, data) }
-          resolve(data);
+          try {
+            if (error) {
+              throw error
+            }
+            console.log(`[CALL] [${String(options.method).toUpperCase()}] ${options.url} - ${response.statusCode}`);
+            let data = JSON.parse(body);
+            if (resPath) { data = _.get(data, resPath); }
+            if (callback) {
+              callback(null, data)
+            }
+            resolve(data);
+          } catch (error) {
+            console.log(error);
+            reject(error);
+          }
         });
       } catch (e) {
         console.log(e);
-        if (callback) { callback(e, null) }
-        resolve();
+        if (callback) {
+          callback(e, null)
+        }
+        reject(e);
       }
     })
   }
